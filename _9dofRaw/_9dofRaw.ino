@@ -6,7 +6,7 @@
 
 LSM303 compass;
 L3G gyro;
-int gyroOffSet[3];
+float gyroOffSet[3];
 int accOffSet[3];
 
 
@@ -64,12 +64,12 @@ void initgyro(){
     while (1);
   }
   gyro.writeReg(L3G_CTRL_REG4, 0x20); // 2000 dps full scale, 70mdeg per LSB
-  gyro.writeReg(L3G_CTRL_REG1, 0x0F); // normal power mode, all axes enabled, 100 Hz
+  gyro.writeReg(L3G_CTRL_REG1, 0x0F); // normal power mode, all axes enabled, 95 Hz
 }
 void calibrateAll(){
    compass.m_min = (LSM303::vector<int16_t>){-459, -864, -879};
    compass.m_max = (LSM303::vector<int16_t>){+598, +198, +551};
-   for(int i=0;i<100;i++){//calibrate all sensors
+   for(int i=0;i<64;i++){//calibrate all sensors
      compass.read();
      gyro.read();
      accOffSet[0]+=compass.a.x;
@@ -80,12 +80,12 @@ void calibrateAll(){
      gyroOffSet[2]+=(int)gyro.g.z;
      delay(20);
   }
-  accOffSet[0]/=100;
-  accOffSet[1]/=100;
-  accOffSet[2]/=100;
-  gyroOffSet[0]/=100;
-  gyroOffSet[1]/=100;
-  gyroOffSet[2]/=100; 
+  accOffSet[0]/=64;
+  accOffSet[1]/=64;
+  accOffSet[2]/=64;
+  gyroOffSet[0]/=64;
+  gyroOffSet[1]/=64;
+  gyroOffSet[2]/=64; 
   
  // accOffSet[0]=-90;
  // accOffSet[1]=11;
